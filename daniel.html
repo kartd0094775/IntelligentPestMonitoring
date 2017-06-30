@@ -1,0 +1,412 @@
+<!DOCTYPE HTML>
+<!--
+	Prologue by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Prologue by HTML5 UP</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+        
+        <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+  
+        <!--highmap-->
+        <script type="text/javascript">
+           $(function () {
+
+    // Initiate the chart
+    $('#containerr').highcharts('Map', {
+    
+    
+    
+    	chart : {
+                borderWidth : 5
+            },
+
+            title : {
+                text : 'Insect Number of The Area',
+                "color": '#333333', 
+                "fontSize": '50px'
+            },
+						subtitle: {
+                        text: 'Source: <a href="http://en.wikipedia.org/wiki/United_States_presidential_election,' 																+'_2012">Wikipedia</a>'
+            },
+            legend: {
+                title:{text: 'Insect per km²'},
+                layout: 'horizontal',
+                borderWidth:0,
+                borderColor:	'#5B5B5B',
+                backgroundColor: 'rgba(255,255,255,0.85)',
+                floating: false,
+                verticalAlign: 'bottom',
+                align: 'left',
+                y:-20,
+                x:-10,
+                align: 'right'
+            },
+
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
+                }
+            },
+
+            colorAxis: {
+                min: null,
+                max: null,
+                type: 'linear',
+                minColor: '#00A600',
+                maxColor: '#EA0000',
+                stops: [
+                    [0, '#00A600'],
+                    [0.5, '#FFD306'],
+                    [1, '#EA0000']
+                ]
+            },
+            series:[
+            {	animation: {
+                    duration: 100
+              },
+              "type": "map",
+              "data": [
+                {
+                  "name": "taiwan",
+                  "value":48,
+                  "path": "M0,-837C267,-602,261,-612,261,-612L188,-338,276,-151,557,-303,554,-704z"
+                },
+                {
+                  "name": "japan",
+                  "value":81,
+                  "path": "M554,-695,644,-955,890,-749,1000,-466,890,41,557,-303L557,-307,557,-311"
+                }
+              ],
+              dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    format: '{point.name}'
+                },
+                name: 'Insect density',
+                tooltip: {
+                		//headerFormat: '<span style="font-size:10px">{series.name}</span><br/>',
+                		pointFormat: '{point.name}: {point.value}/km²<br/>',
+               			footerFormat: '<span style="font-size:10px">Source: Wikipedia</span><br/>'
+                },
+                states: {
+                  hover: {
+                      color: '#2894FF'
+                	}
+            		}
+            }]
+    });
+});
+        </script>
+               
+        <!--highchart-->
+		<script type="text/javascript">
+            $(function () {
+                $('#cont').highcharts({
+                    title: {
+                        text: 'Monthly Average Temperature',
+                        x: -20 //center
+                    },
+                    subtitle: {
+                        text: 'Source: WorldClimate.com',
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Temperature (°C)'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: '°C'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle',
+                        borderWidth: 0
+                    },
+                    series: [{
+                        name: 'Tokyo',
+                        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                    }, {
+                        name: 'New York',
+                        data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+                    }, {
+                        name: 'Berlin',
+                        data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+                    }, {
+                        name: 'London',
+                        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+                    }]
+                });
+            });
+		</script>
+	</head>
+	<body>
+ <?php
+     	require("phpsqlajax_dbinfo.php");
+
+       // Connect to the database
+         $conn = new mysqli($servername, $username, $password);
+         if ($conn->connect_error) {
+             die('Connected Failed : ' . $conn->connect_error) . "<br>";
+         }
+         //echo "Connected successfully" . "<br>";
+         // Set the active MySQL database
+         $conn->select_db($database);
+
+
+         $sql = "SELECT MAX(id) FROM insectnumber";
+         if($conn->query($sql) == TRUE) 
+         {
+             $result = $conn->query($sql);
+             $temp = $result->fetch_array(); 
+             $id=$temp[0];
+             $sql = "SELECT numbers, record_date FROM insectnumber where id = $id";
+             if($conn->query($sql) == TRUE) 
+             {
+                 
+                 $temp = $conn->query($sql)->fetch_array(); 
+                 $number = $temp[0];
+                 $record_date = $temp[1];
+                 $data[0] = $number;
+                 $data[1] = $record_date;
+
+                 $arr = array('number' => $number , 'time' => $record_date , 'path'=> "M0,-837C267,-602,261,-612,261,-612L188,-338,276,-151,557,-303,554,-704z" );
+
+                 $abc = json_encode($arr, JSON_NUMERIC_CHECK);
+                 echo "[";
+                 echo $abc;
+                 echo "]";
+             }
+         }
+         $conn->close();
+         
+ ?>
+		<!-- Header -->
+			<div id="header">
+
+				<div class="top">
+
+					<!-- Logo -->
+						<div id="logo">
+							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
+							<h1 id="title">Daniel Chi</h1>
+							<p>Intelligent Pest Monitoring</p>
+						</div>
+
+					<!-- Nav -->
+						<nav id="nav">
+							<!--
+
+								Prologue's nav expects links in one of two formats:
+
+								1. Hash link (scrolls to a different section within the page)
+
+								   <li><a href="#foobar" id="foobar-link" class="icon fa-whatever-icon-you-want skel-layers-ignoreHref"><span class="label">Foobar</span></a></li>
+
+								2. Standard link (sends the user to another page/site)
+
+								   <li><a href="http://foobar.tld" id="foobar-link" class="icon fa-whatever-icon-you-want"><span class="label">Foobar</span></a></li>
+
+							-->
+							<ul>
+								<li><a href="#top" id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Intro</span></a></li>
+								<li><a href="#about" id="about-link" class="skel-layers-ignoreHref"><span class="icon fa-area-chart">Insect Number</span></a></li>
+                                <li><a href="#portfolio" id="portfolio-link" class="skel-layers-ignoreHref"><span class="icon fa-line-chart">Time -°C</span></a></li>
+								<li><a href="#contact" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Contact</span></a></li>
+                    
+							</ul>
+						</nav>
+
+				</div>
+
+				<div class="bottom">
+
+					<!-- Social Icons -->
+						<ul class="icons">
+							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+							<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
+						</ul>
+
+				</div>
+
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- Intro -->
+					<section id="top" class="one dark cover">
+						<div class="container">
+
+							<header>
+								<h2 class="alt">Hi! This is <strong>Intalligent Pest Monitoring</strong>, a system<br />
+								that tries to monitor insects was designed by us.</h2>
+								<p>歡迎使用本系統，讓我們按下START建開始吧XD</p>
+							</header>
+
+							<footer>
+								<a href="#about" class="button scrolly">START</a>
+							</footer>
+
+						</div>
+					</section>
+
+				
+				<!-- About Me -->
+					<section id="about" class="three">
+						<div class="container">
+
+							<header>
+								<h2>Insect Number</h2>
+							</header>
+                            <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+                            <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+                            <script src="http://code.highcharts.com/maps/modules/map.js"></script>
+                            
+                            <div id="containerr" style="min-width: 300px; max-width: 1400px; height:600px;"></div>
+							<p>Tincidunt eu elit diam magnis pretium accumsan etiam id urna. Ridiculus
+							ultricies curae quis et rhoncus velit. Lobortis elementum aliquet nec vitae
+							laoreet eget cubilia quam non etiam odio tincidunt montes. </p>
+
+						</div>
+					</section>
+                 <!-- Portfolio -->
+					<section id="portfolio" class="two">
+						<div class="container">
+
+							<header>
+								<h2>Time -°C</h2>
+							</header>
+                            
+                            <div id="cont" style="min-width: 960px; height: 650px; margin: 0 auto"></div>
+
+							<p>Vitae natoque dictum etiam semper magnis enim feugiat convallis convallis
+							egestas rhoncus ridiculus in quis risus amet curabitur tempor orci penatibus.
+							Tellus erat mauris ipsum fermentum etiam vivamus eget. Nunc nibh morbi quis
+							fusce hendrerit lacus ridiculus.</p>
+
+                            
+							<!--div class="row">
+								<div class="4u 12u$(mobile)">
+									<article class="item">
+										<a href="#" class="image fit"><img src="images/pic02.jpg" alt="" /></a>
+										<header>
+											<h3>Ipsum Feugiat</h3>
+										</header>
+									</article>
+									<article class="item">
+										<a href="#" class="image fit"><img src="images/pic03.jpg" alt="" /></a>
+										<header>
+											<h3>Rhoncus Semper</h3>
+										</header>
+									</article>
+								</div>
+								<div class="4u 12u$(mobile)">
+									<article class="item">
+										<a href="#" class="image fit"><img src="images/pic04.jpg" alt="" /></a>
+										<header>
+											<h3>Magna Nullam</h3>
+										</header>
+									</article>
+									<article class="item">
+										<a href="#" class="image fit"><img src="images/pic05.jpg" alt="" /></a>
+										<header>
+											<h3>Natoque Vitae</h3>
+										</header>
+									</article>
+								</div>
+								<div class="4u$ 12u$(mobile)">
+									<article class="item">
+										<a href="#" class="image fit"><img src="images/pic06.jpg" alt="" /></a>
+										<header>
+											<h3>Dolor Penatibus</h3>
+										</header>
+									</article>
+									<article class="item">
+										<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
+										<header>
+											<h3>Orci Convallis</h3>
+										</header>
+									</article>
+								</div>
+							</div-->
+
+						</div>
+					</section>
+				<!-- Contact -->
+					<section id="contact" class="four">
+						<div class="container">
+
+							<header>
+								<h2>Contact</h2>
+							</header>
+
+							<p>Elementum sem parturient nulla quam placerat viverra
+							mauris non cum elit tempus ullamcorper dolor. Libero rutrum ut lacinia
+							donec curae mus. Eleifend id porttitor ac ultricies lobortis sem nunc
+							orci ridiculus faucibus a consectetur. Porttitor curae mauris urna mi dolor.</p>
+
+							<form method="post" action="#">
+								<div class="row">
+									<div class="6u 12u$(mobile)"><input type="text" name="name" placeholder="Name" /></div>
+									<div class="6u$ 12u$(mobile)"><input type="text" name="email" placeholder="Email" /></div>
+									<div class="12u$">
+										<textarea name="message" placeholder="Message"></textarea>
+									</div>
+									<div class="12u$">
+										<input type="submit" value="Send Message" />
+									</div>
+								</div>
+							</form>
+
+						</div>
+					</section>
+               
+
+
+			</div>
+
+		<!-- Footer -->
+			<div id="footer">
+
+				<!-- Copyright -->
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+
+			</div>
+
+		<!-- Scripts -->
+			<!-- Scripts                 <script src="assets/js/jquery.min.js"></script>                         -->
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollzer.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
